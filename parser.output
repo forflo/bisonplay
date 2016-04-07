@@ -1,0 +1,207 @@
+State 8 conflicts: 1 shift/reduce
+State 15 conflicts: 2 reduce/reduce
+
+
+Grammar
+
+    0 $accept: start $end
+
+    1 start: prog
+
+    2 prog: assignment
+    3     | prog assignment
+
+    4 assignment: 'I' '=' function_call
+    5           | 'I' '=' array_indexing
+
+    6 function_call: 'I' '(' 'N' ')'
+    7              | 'I'
+
+    8 array_indexing: function_call '(' 'N' ')'
+    9               | 'I' '(' 'N' ')'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 6 8 9
+')' (41) 6 8 9
+'=' (61) 4 5
+'I' (73) 4 5 6 7 9
+'N' (78) 6 8 9
+error (256)
+
+
+Nonterminals, with rules where they appear
+
+$accept (8)
+    on left: 0
+start (9)
+    on left: 1, on right: 0
+prog (10)
+    on left: 2 3, on right: 1 3
+assignment (11)
+    on left: 4 5, on right: 2 3
+function_call (12)
+    on left: 6 7, on right: 4 8
+array_indexing (13)
+    on left: 8 9, on right: 5
+
+
+State 0
+
+    0 $accept: . start $end
+    1 start: . prog
+    2 prog: . assignment
+    3     | . prog assignment
+    4 assignment: . 'I' '=' function_call
+    5           | . 'I' '=' array_indexing
+
+    'I'  shift, and go to state 1
+
+    start       go to state 2
+    prog        go to state 3
+    assignment  go to state 4
+
+
+State 1
+
+    4 assignment: 'I' . '=' function_call
+    5           | 'I' . '=' array_indexing
+
+    '='  shift, and go to state 5
+
+
+State 2
+
+    0 $accept: start . $end
+
+    $end  shift, and go to state 6
+
+
+State 3
+
+    1 start: prog .  [$end]
+    3 prog: prog . assignment
+    4 assignment: . 'I' '=' function_call
+    5           | . 'I' '=' array_indexing
+
+    'I'  shift, and go to state 1
+
+    $default  reduce using rule 1 (start)
+
+    assignment  go to state 7
+
+
+State 4
+
+    2 prog: assignment .
+
+    $default  reduce using rule 2 (prog)
+
+
+State 5
+
+    4 assignment: 'I' '=' . function_call
+    5           | 'I' '=' . array_indexing
+    6 function_call: . 'I' '(' 'N' ')'
+    7              | . 'I'
+    8 array_indexing: . function_call '(' 'N' ')'
+    9               | . 'I' '(' 'N' ')'
+
+    'I'  shift, and go to state 8
+
+    function_call   go to state 9
+    array_indexing  go to state 10
+
+
+State 6
+
+    0 $accept: start $end .
+
+    $default  accept
+
+
+State 7
+
+    3 prog: prog assignment .
+
+    $default  reduce using rule 3 (prog)
+
+
+State 8
+
+    6 function_call: 'I' . '(' 'N' ')'
+    7              | 'I' .  [$end, 'I', '(']
+    9 array_indexing: 'I' . '(' 'N' ')'
+
+    '('  shift, and go to state 11
+
+    '('       [reduce using rule 7 (function_call)]
+    $default  reduce using rule 7 (function_call)
+
+
+State 9
+
+    4 assignment: 'I' '=' function_call .  [$end, 'I']
+    8 array_indexing: function_call . '(' 'N' ')'
+
+    '('  shift, and go to state 12
+
+    $default  reduce using rule 4 (assignment)
+
+
+State 10
+
+    5 assignment: 'I' '=' array_indexing .
+
+    $default  reduce using rule 5 (assignment)
+
+
+State 11
+
+    6 function_call: 'I' '(' . 'N' ')'
+    9 array_indexing: 'I' '(' . 'N' ')'
+
+    'N'  shift, and go to state 13
+
+
+State 12
+
+    8 array_indexing: function_call '(' . 'N' ')'
+
+    'N'  shift, and go to state 14
+
+
+State 13
+
+    6 function_call: 'I' '(' 'N' . ')'
+    9 array_indexing: 'I' '(' 'N' . ')'
+
+    ')'  shift, and go to state 15
+
+
+State 14
+
+    8 array_indexing: function_call '(' 'N' . ')'
+
+    ')'  shift, and go to state 16
+
+
+State 15
+
+    6 function_call: 'I' '(' 'N' ')' .  [$end, 'I', '(']
+    9 array_indexing: 'I' '(' 'N' ')' .  [$end, 'I']
+
+    $end      reduce using rule 6 (function_call)
+    $end      [reduce using rule 9 (array_indexing)]
+    'I'       reduce using rule 6 (function_call)
+    'I'       [reduce using rule 9 (array_indexing)]
+    $default  reduce using rule 6 (function_call)
+
+
+State 16
+
+    8 array_indexing: function_call '(' 'N' ')' .
+
+    $default  reduce using rule 8 (array_indexing)
